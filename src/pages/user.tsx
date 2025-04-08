@@ -1,9 +1,8 @@
+import UsersTable from "../components/user/users.table"
 
 const UserPage = () => {
     return (
-        <div>
-            User Page
-        </div>
+        <UsersTable />
     )
 }
 export default UserPage

@@ -1,0 +1,35 @@
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    button {
+        padding: 10px 20px;
+        background-color: #1d5568;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        transition: all 0.5 ease-in;
+
+
+    }
+
+    button:hover {
+        background-color: white;
+        color: #1d5568;
+        border: 1px solid #ccc;
+        transition: all 0.5 ease-in;
+    }
+}
+
+.button-delete {
+    margin-left: 10px;
+}
+
+.ant-form-item {
+    margin-bottom: 12px;
+}
