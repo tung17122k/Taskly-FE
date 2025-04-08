@@ -2,9 +2,10 @@
 export { };
 declare global {
     interface IUserData {
-        username: string;
+        username?: string;
         email: string;
         password: string;
         confirmPassword?: string;
+        role?: string
     }
 }
