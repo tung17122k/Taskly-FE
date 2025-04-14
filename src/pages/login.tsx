@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import type { FormProps } from 'antd';
 import { Button, Form, Input, notification } from 'antd';
 import { loginApi } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { AuthContext } from '../context/auth.context';
 
 
 
@@ -11,7 +12,7 @@ import Cookies from 'js-cookie';
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
 
-
+    const { setAuth } = useContext(AuthContext);
     const onFinish: FormProps<IUserData>['onFinish'] = async (values) => {
         try {
             const { email, password } = values as IUserData;
@@ -37,6 +38,11 @@ const LoginPage: React.FC = () => {
 
                 localStorage.setItem('access_token', res.data.access_token);
                 localStorage.setItem('refresh_token', res.data.refresh_token);
+                // localStorage.setItem('user', JSON.stringify(res.data.user));
+                setAuth({
+                    isAuthenticated: true,
+                    user: res.data.user
+                });
 
                 navigate('/');
             } else {
