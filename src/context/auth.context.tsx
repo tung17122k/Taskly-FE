@@ -9,6 +9,8 @@ interface User {
 interface AuthContextType {
     auth: AuthState;
     setAuth: React.Dispatch<React.SetStateAction<AuthState>>;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface AuthWrapperProps {
@@ -30,6 +32,8 @@ export const AuthContext = createContext<AuthContextType>({
         },
     },
     setAuth: () => { },
+    isLoading: true,
+    setIsLoading: () => { },
 })
 
 export const AuthWrapper = ({ children }: AuthWrapperProps) => {
@@ -41,8 +45,10 @@ export const AuthWrapper = ({ children }: AuthWrapperProps) => {
             role: "",
         }
     })
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <AuthContext.Provider value={{ auth, setAuth, isLoading, setIsLoading }}>
             {children}
         </AuthContext.Provider>
     )

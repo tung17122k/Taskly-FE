@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined, ShoppingOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,12 +20,11 @@ const Header: React.FC = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = auth.user;
 
         if (storedUser) {
             try {
-                const parsedUser = JSON.parse(storedUser);
-                setUserRole(parsedUser.role || null);
+                setUserRole(storedUser.role || null);
             } catch (e) {
                 console.error('Invalid user data in localStorage');
             }
@@ -34,7 +33,6 @@ const Header: React.FC = () => {
 
 
     const handleLogout = () => {
-        // localStorage.removeItem('user');
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         setAuth({
@@ -53,10 +51,15 @@ const Header: React.FC = () => {
             {
                 label: <Link to="/">Home Page</Link>,
                 key: 'home',
-                icon: <MailOutlined />,
+                icon: <ShoppingOutlined />,
             },
+            ...(auth?.isAuthenticated && auth?.user?.role === "admin" ? [{
+                label: <Link to="/user">Users</Link>,
+                key: 'user',
+                icon: <UserOutlined />,
+            }] : []),
             {
-                label: 'Welcome',
+                label: 'Setting',
                 key: 'SubMenu',
                 icon: <SettingOutlined />,
                 children: auth.isAuthenticated ? [
@@ -67,20 +70,13 @@ const Header: React.FC = () => {
             },
         ];
 
-        if (auth?.isAuthenticated && auth?.user?.role === 'admin') {
-            baseItems.push({
-                label: <Link to="/user">Users</Link>,
-                key: 'user',
-                icon: <MailOutlined />,
-            });
-        }
 
         return baseItems;
     }, [userRole]);
 
 
     const onClick: MenuProps['onClick'] = (e) => {
-        console.log('click ', e);
+        // console.log('click ', e);
         setCurrent(e.key);
         if (e.key === 'logout') {
             handleLogout();
