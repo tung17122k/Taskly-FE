@@ -15,7 +15,7 @@ const Header: React.FC = () => {
     const [userRole, setUserRole] = useState<string | null>(null);
 
     const { auth, setAuth } = useContext(AuthContext);
-    console.log(">>>check auth", auth);
+    // console.log(">>>check auth", auth);
 
     const navigate = useNavigate()
 
