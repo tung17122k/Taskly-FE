@@ -5,6 +5,7 @@ import { Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
 
+
 type MenuItem = Required<MenuProps>['items'][number];
 
 
@@ -43,6 +44,7 @@ const Header: React.FC = () => {
                 role: "",
             },
         })
+
         navigate('/login');
     };
 
