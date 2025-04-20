@@ -18,7 +18,8 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
     (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-        const accessToken = Cookies.get('access_token');
+        // const accessToken = Cookies.get('access_token');
+        const accessToken = localStorage.getItem('access_token');
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }

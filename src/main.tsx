@@ -10,6 +10,7 @@ import App from './App';
 import UserPage from './pages/user';
 import HomePage from './pages/home';
 import LoginPage from './pages/login';
+import { AuthWrapper } from './context/auth.context';
 
 
 
@@ -41,6 +42,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthWrapper>
+      <RouterProvider router={router} />
+    </AuthWrapper>
   </StrictMode>,
 )

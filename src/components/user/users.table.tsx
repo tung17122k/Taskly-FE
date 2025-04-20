@@ -3,6 +3,7 @@ import { Table, notification, Button, Popconfirm } from 'antd';
 import { ColumnsType } from "antd/es/table";
 // @ts-ignore
 import axios from '@/utils/axios.customize.ts';
+import UpdateUserModal from "./update.user.modal";
 
 const UsersTable = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -20,7 +21,7 @@ const UsersTable = () => {
 
     const getData = async () => {
         const res = await axios.get(`http://localhost:8080/v1/api/user?limit=${limit}&page=${page}`);
-        console.log(res);
+        // console.log(res);
         setListUsers(res.data.data);
         setLoading(false)
         setTotal(res.data.total);
@@ -29,6 +30,22 @@ const UsersTable = () => {
     const handleOnChange = (page: number, pageSize: number) => {
         setPage(page);
     }
+
+    const confirm = async (user: IUserData) => {
+        const res = await axios.delete(`http://localhost:8080/v1/api/user?userId=${user._id}`);
+        console.log(">>>>res", res);
+
+        if (res.status === 200) {
+            notification.success({
+                message: res.data.message
+            })
+            getData();
+        } else {
+            notification.error({
+                message: res.data.message
+            })
+        }
+    };
 
 
     const columns: ColumnsType<IUserData> = [
@@ -57,13 +74,13 @@ const UsersTable = () => {
                         <Button
 
                             onClick={() => {
-                                console.log(record)
+                                // console.log(record)
                                 setDataUpdate(record);
                                 setIsUpdateModalOpen(true)
                             }}>
                             Edit
                         </Button>
-                        {/* <Popconfirm
+                        <Popconfirm
                             title="Delete the user"
                             description={`Are you sure to delete this user ${record.username}?`}
                             onConfirm={() => confirm(record)}
@@ -76,7 +93,7 @@ const UsersTable = () => {
                             >
                                 Delete
                             </Button>
-                        </Popconfirm> */}
+                        </Popconfirm>
                     </>
                 )
             }
@@ -103,6 +120,13 @@ const UsersTable = () => {
                     showSizeChanger: true
 
                 }}
+            />
+            <UpdateUserModal
+                getData={getData}
+                isUpdateModalOpen={isUpdateModalOpen}
+                setIsUpdateModalOpen={setIsUpdateModalOpen}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
             />
         </div>
     )

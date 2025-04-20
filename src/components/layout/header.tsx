@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { MailOutlined, SettingOutlined } from '@ant-design/icons';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { SettingOutlined, UserOutlined, ShoppingOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/auth.context';
+
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -12,17 +14,18 @@ type MenuItem = Required<MenuProps>['items'][number];
 const Header: React.FC = () => {
     const [current, setCurrent] = useState('mail');
     const [userRole, setUserRole] = useState<string | null>(null);
-    const [user, setUser] = useState<IUserData | null>(null);
+
+    const { auth, setAuth } = useContext(AuthContext);
+    // console.log(">>>check auth", auth);
+
     const navigate = useNavigate()
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = auth.user;
 
         if (storedUser) {
             try {
-                const parsedUser = JSON.parse(storedUser);
-                setUser(parsedUser);
-                setUserRole(parsedUser.role || null);
+                setUserRole(storedUser.role || null);
             } catch (e) {
                 console.error('Invalid user data in localStorage');
             }
@@ -31,10 +34,17 @@ const Header: React.FC = () => {
 
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        setUser(null);
+        setAuth({
+            isAuthenticated: false,
+            user: {
+                email: "",
+                username: "",
+                role: "",
+            },
+        })
+
         navigate('/login');
     };
 
@@ -43,13 +53,18 @@ const Header: React.FC = () => {
             {
                 label: <Link to="/">Home Page</Link>,
                 key: 'home',
-                icon: <MailOutlined />,
+                icon: <ShoppingOutlined />,
             },
+            ...(auth?.isAuthenticated && auth?.user?.role === "admin" ? [{
+                label: <Link to="/user">Users</Link>,
+                key: 'user',
+                icon: <UserOutlined />,
+            }] : []),
             {
-                label: 'Welcome',
+                label: 'Setting',
                 key: 'SubMenu',
                 icon: <SettingOutlined />,
-                children: user ? [
+                children: auth.isAuthenticated ? [
                     { label: 'Đăng xuất', key: 'logout' },
                 ] : [
                     { label: <Link to="/login">Đăng nhập</Link>, key: 'login' }
@@ -57,20 +72,13 @@ const Header: React.FC = () => {
             },
         ];
 
-        if (userRole === 'admin') {
-            baseItems.push({
-                label: <Link to="/user">Users</Link>,
-                key: 'user',
-                icon: <MailOutlined />,
-            });
-        }
 
         return baseItems;
     }, [userRole]);
 
 
     const onClick: MenuProps['onClick'] = (e) => {
-        console.log('click ', e);
+        // console.log('click ', e);
         setCurrent(e.key);
         if (e.key === 'logout') {
             handleLogout();
