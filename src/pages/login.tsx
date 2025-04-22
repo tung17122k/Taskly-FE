@@ -44,6 +44,12 @@ const LoginPage: React.FC = () => {
                     user: res.data.user
                 });
 
+                // localStorage.setItem('user', JSON.stringify(res.data.user));
+                setAuth({
+                    isAuthenticated: true,
+                    user: res.data.user
+                });
+
                 navigate('/');
             } else {
                 notification.error({
