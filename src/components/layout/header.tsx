@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { SettingOutlined, UserOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined, ShoppingOutlined, BorderlessTableOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
@@ -48,15 +48,20 @@ const Header: React.FC = () => {
 
     const items: MenuItem[] = useMemo(() => {
         const baseItems: MenuItem[] = [
-            {
-                label: <Link to="/">Home Page</Link>,
+            ...(auth?.isAuthenticated && auth?.user?.role === "customer" ? [{
+                label: <Link to="/">Home</Link>,
                 key: 'home',
                 icon: <ShoppingOutlined />,
-            },
+            }] : []),
             ...(auth?.isAuthenticated && auth?.user?.role === "admin" ? [{
                 label: <Link to="/user">Users</Link>,
                 key: 'user',
                 icon: <UserOutlined />,
+            }] : []),
+            ...(auth?.isAuthenticated && auth?.user?.role === "admin" ? [{
+                label: <Link to="/category">Category</Link>,
+                key: 'category',
+                icon: <BorderlessTableOutlined />,
             }] : []),
             {
                 label: 'Setting',

@@ -11,6 +11,7 @@ import UserPage from './pages/user';
 import HomePage from './pages/home';
 import LoginPage from './pages/login';
 import { AuthWrapper } from './context/auth.context';
+import CategoryPage from './pages/category';
 
 
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <UserPage />
+      },
+      {
+        path: "/category",
+        element: <CategoryPage />
       },
     ]
   },
